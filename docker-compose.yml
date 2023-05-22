@@ -1,13 +1,15 @@
 version: '3.10'
 
 services:
-#  fast_api:
-#    build:
-#      context: ./fast_api
-#    env_file:
-#      - ./fast_api/.env
-#    volumes:
-#      - ./fast_api:/app
+  fastapi_ugc:
+    build:
+      context: ./fastapi_ugc
+    env_file:
+      - ./fastapi_ugc/.env
+    volumes:
+      - ./fastapi_ugc:/app
+    ports:
+      - '8000:8000'
 #    depends_on:
 #      - kafka
 #
