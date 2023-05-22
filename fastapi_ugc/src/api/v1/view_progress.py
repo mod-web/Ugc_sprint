@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from src.models.view_progress import QueryParams
+from src.services.kafka_storage import KafkaStorage, get_kafka_storage
 
 router = APIRouter()
 
@@ -12,5 +13,6 @@ router = APIRouter()
 )
 async def save_view_progress_to_kafka(
     save_view_progress_to_kafka_params: QueryParams,
+    kafka_storage: KafkaStorage = Depends(get_kafka_storage),
 ):
-    return {'res': save_view_progress_to_kafka_params.dict()}
+    await kafka_storage.send_message_to_topic(save_view_progress_to_kafka_params.dict())
