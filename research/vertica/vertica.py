@@ -13,6 +13,7 @@ connection_info = {
     'autocommit': True,
 }
 
+
 def gen_data(row: int, iterate: int):
     block = []
     fake = Faker()
