@@ -9,11 +9,11 @@ from settings import settings
 
 
 class KafkaStorage:
-    def __init__(self, producer):
+    def __init__(self, producer: AIOKafkaProducer) -> None:
         self.producer = producer
         self.topic = settings.kafka_topic
 
-    async def send_message_to_topic(self, values: dict):
+    async def send_message_to_topic(self, values: dict) -> None:
         message = {
             'user_id': values.get('user_id'),
             'film_id': values.get('film_id'),
