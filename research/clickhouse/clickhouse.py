@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     for i in gen_data(1000, 10000):
         client.execute(
-            f"INSERT INTO views.frame (id, user_id, movie_id, viewed_frame, event_time) VALUES",
+            "INSERT INTO views.frame (id, user_id, movie_id, viewed_frame, event_time) VALUES",
             i,
         )
 
@@ -63,6 +63,3 @@ if __name__ == "__main__":
 
     result_select = time.time() - start
     print(f'Total time SELECT: {result_select}')    # Total time SELECT(100): 45.223976373672485
-
-
-
