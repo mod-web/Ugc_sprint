@@ -1,3 +1,4 @@
+import asyncio
 import json
 from datetime import datetime
 
@@ -8,11 +9,11 @@ from settings import settings
 
 
 class KafkaStorage:
-    def __init__(self):
-        self.producer = AIOKafkaProducer(bootstrap_servers=f'{settings.kafka_host}:{settings.kafka_port}')
+    def __init__(self, producer):
+        self.producer = producer
         self.topic = settings.kafka_topic
 
-    async def send_message_to_topic(self, values: dict) -> None:
+    async def send_message_to_topic(self, values: dict):
         message = {
             'user_id': values.get('user_id'),
             'film_id': values.get('film_id'),
@@ -31,4 +32,11 @@ class KafkaStorage:
 
 
 def get_kafka_storage() -> KafkaStorage:
-    return KafkaStorage()
+    try:
+        loop = asyncio.new_event_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop = asyncio.get_event_loop()
+    producer = AIOKafkaProducer(loop=loop, bootstrap_servers=f'{settings.kafka_host}:{settings.kafka_port}')
+    return KafkaStorage(producer)
