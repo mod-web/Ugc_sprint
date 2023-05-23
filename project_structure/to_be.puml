@@ -23,7 +23,6 @@ database ElasticSearch
 database Postgres
 }
 
-
 Auth --> PostgresAuth: "Сохранение клиента в базу"
 Client -> Auth: "Регистрация клиента / \nАутентификация"
 Auth -> RedisAuth: "Черный список\nRefresh токенов"

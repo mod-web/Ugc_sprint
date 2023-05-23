@@ -3,12 +3,6 @@ skinparam componentStyle uml2
 actor Client
 component "AdminPanel"
 
-
-
-
-
-
-
 rectangle AuthService #line:green{
 database RedisAuth
 component "Сервис Auth" as Auth
