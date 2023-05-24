@@ -24,9 +24,9 @@ class KafkaStorage:
         await self.producer.start()
         try:
             await self.producer.send(
-                key=f'{message["user_id"]}:{message["film_id"]}',
+                key=f'{message["user_id"]}:{message["film_id"]}'.encode('utf-8'),
                 topic=self.topic,
-                value=json.dumps(message),
+                value=json.dumps(message).encode('utf-8'),
             )
         except KafkaError:
             pass
