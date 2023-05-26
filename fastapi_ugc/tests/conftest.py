@@ -1,0 +1,4 @@
+HOST = 'http://0.0.0.0'
+USER_ID = '1569523'
+FILM_ID = '51554'
+VIEWED_FRAME = 340
