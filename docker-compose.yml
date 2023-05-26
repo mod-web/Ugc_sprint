@@ -73,7 +73,7 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
 
-   reachable on 9092 from the host and on 29092 from inside docker compose
+#   reachable on 9092 from the host and on 29092 from inside docker compose
   kafka:
     image: confluentinc/cp-kafka:6.1.1
     depends_on:
