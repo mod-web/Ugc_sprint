@@ -1,5 +1,5 @@
 import pytest
-from kafka.admin import KafkaAdminClient
+from kafka.admin import KafkaAdminClient, NewTopic
 
 HOST = '0.0.0.0'
 PORT = '8000'
@@ -13,7 +13,7 @@ KAFKA_PORT = '9092'
 @pytest.fixture
 def create_and_delete_test_topic():
     """Удалить тестовый топик"""
-    kafka_admin = KafkaAdminClient(bootstrap_servers=f'{HOST}:{KAFKA_PORT}')
-    kafka_admin.create_topics((KAFKA_TEST_TOPIC,))
+    kafka_admin = KafkaAdminClient(bootstrap_servers=[f'{HOST}:{KAFKA_PORT}'])
+    kafka_admin.create_topics(new_topics=[NewTopic(name=KAFKA_TEST_TOPIC, num_partitions=1, replication_factor=1)])
     yield
     KafkaAdminClient(bootstrap_servers=f'{HOST}:{KAFKA_PORT}').delete_topics((KAFKA_TEST_TOPIC,))
