@@ -35,9 +35,11 @@ def gen_data(row: int, iterate: int):
             block = []
             timestamp = fake.date_time()
 
+
 def get_user_ids(cursor):
     rows = cursor.execute("""SELECT DISTINCT user_id from views""")
     return [str(row[0]) for row in rows.iterate()]
+
 
 def get_movie_ids(cursor):
     rows = cursor.execute("""SELECT DISTINCT movie_id from views""")

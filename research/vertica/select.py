@@ -15,16 +15,20 @@ connection_info = {
     'autocommit': True,
 }
 
+
 def get_user_ids(cursor):
     rows = cursor.execute("""SELECT DISTINCT user_id from views""")
     return [str(row[0]) for row in rows.iterate()]
+
 
 def get_movie_ids(cursor):
     rows = cursor.execute("""SELECT DISTINCT movie_id from views""")
     return [str(row[0]) for row in rows.iterate()]
 
+
 def load():
     load_vertica()
+
 
 def test_select():
     with vertica_python.connect(**connection_info) as connection:

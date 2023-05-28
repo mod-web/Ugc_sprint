@@ -10,12 +10,15 @@ def user_ids(client):
     rows = client.execute("""SELECT DISTINCT user_id from views.frame""")
     return [str(row[0]) for row in rows]
 
+
 def movie_ids(client):
     rows = client.execute("""SELECT DISTINCT movie_id from views.frame""")
     return [str(row[0]) for row in rows]
 
+
 def load():
     load_clickhouse()
+
 
 def test_select():
     client = Client(host="localhost")
