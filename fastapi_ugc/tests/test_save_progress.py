@@ -1,8 +1,9 @@
 import json
 from time import sleep
-
+from settings import settings
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
+from jose import jwt
 
 from kafka import KafkaProducer, KafkaConsumer
 
@@ -17,7 +18,15 @@ data = {
 
 
 def test_save_movie_progress():
-    headers = {"Content-Type": "application/json; charset=utf-8"}
+    payload = {'user_id': USER_ID,
+               'first_name': "Тест",
+               'last_name': "Тест",
+               'exp': datetime.now()+timedelta(minutes=5),
+               'is_admin': True,
+               'login': 'test@test.ru',
+               'roles': ['admin', 'subscriber']}
+    token = jwt.encode(payload, settings.jwt_secret_key)
+    headers = {"Content-Type": "application/json; charset=utf-8", 'Authorization': f'Bearer {token}'}
     url = f'http://{HOST}:{PORT}/api/v1/view_progress/save'
     response = requests.post(url=url,
                              json=data,
@@ -26,7 +35,7 @@ def test_save_movie_progress():
     assert response.status_code == 200
 
 
-def test_send_event_to_topic(create_and_delete_test_topic):
+def test_send_event_to_topic(delete_test_topic):
     """Проверка отправки события в Kafka"""
 
     producer = KafkaProducer(bootstrap_servers=f'{KAFKA_HOST}:{KAFKA_PORT}')
