@@ -26,8 +26,7 @@ def load_clickhouse():
                    'movie_id': choice(movie_ids),
                    'viewed_frame': randint(100000, 999999),
                    'timestamp': datetime.now(),
-                   }
-                   for i in range(100)]
+                   } for i in range(100)]
 
         client.execute(
             "INSERT INTO views.frame (user_id, movie_id, viewed_frame, timestamp) VALUES",
