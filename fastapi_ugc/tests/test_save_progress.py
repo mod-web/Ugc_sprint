@@ -10,18 +10,18 @@ from kafka import KafkaProducer, KafkaConsumer
 from tests.conftest import HOST, PORT, USER_ID, FILM_ID, VIEWED_FRAME, KAFKA_TEST_TOPIC, KAFKA_PORT, KAFKA_HOST
 
 data = {
-            'user_id': USER_ID,
-            'film_id': FILM_ID,
-            'viewed_frame': VIEWED_FRAME,
-            'message_time': str(datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')),
-        }
+    'user_id': USER_ID,
+    'film_id': FILM_ID,
+    'viewed_frame': VIEWED_FRAME,
+    'message_time': str(datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')),
+}
 
 
 def test_save_movie_progress():
     payload = {'user_id': USER_ID,
                'first_name': "Тест",
                'last_name': "Тест",
-               'exp': datetime.now()+timedelta(minutes=5),
+               'exp': datetime.now() + timedelta(minutes=5),
                'is_admin': True,
                'login': 'test@test.ru',
                'roles': ['admin', 'subscriber']}
@@ -40,10 +40,10 @@ def test_send_event_to_topic(delete_test_topic):
 
     producer = KafkaProducer(bootstrap_servers=f'{KAFKA_HOST}:{KAFKA_PORT}')
     producer.send(
-            key=f'{data["user_id"]}:{data["film_id"]}'.encode('utf-8'),
-            topic=KAFKA_TEST_TOPIC,
-            value=json.dumps(data).encode('utf-8'),
-        )
+        key=f'{data["user_id"]}:{data["film_id"]}'.encode('utf-8'),
+        topic=KAFKA_TEST_TOPIC,
+        value=json.dumps(data).encode('utf-8'),
+    )
     sleep(1)
     consumer = KafkaConsumer(
         KAFKA_TEST_TOPIC,
@@ -57,4 +57,3 @@ def test_send_event_to_topic(delete_test_topic):
     kafka_data_value = json.loads(kafka_data.value.decode('utf-8'))
     for field_name, field_value in kafka_data_value.items():
         assert data[field_name] == field_value
-
