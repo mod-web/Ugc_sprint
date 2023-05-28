@@ -1,7 +1,10 @@
+from datetime import datetime
+
 import vertica_python
 import time
 import uuid
 from faker import Faker
+from random import choice, randint
 
 
 connection_info = {
@@ -17,7 +20,7 @@ connection_info = {
 def gen_data(row: int, iterate: int):
     block = []
     fake = Faker()
-    event_time = fake.date_time()
+    timestamp = fake.date_time()
 
     for i in range(row * iterate):
         viewed_frame = fake.random_int(min=10, max=10)
@@ -26,24 +29,34 @@ def gen_data(row: int, iterate: int):
                       str(uuid.uuid4()),
                       str(uuid.uuid4()),
                       viewed_frame,
-                      event_time))
+                      timestamp))
 
         if len(block) == row:
             yield block
             block = []
-            event_time = fake.date_time()
+            timestamp = fake.date_time()
+
+
+def get_user_ids(cursor):
+    rows = cursor.execute("""SELECT DISTINCT user_id from views""")
+    return [str(row[0]) for row in rows.iterate()]
+
+
+def get_movie_ids(cursor):
+    rows = cursor.execute("""SELECT DISTINCT movie_id from views""")
+    return [str(row[0]) for row in rows.iterate()]
 
 
 if __name__ == "__main__":
     with vertica_python.connect(**connection_info) as connection:
         cursor = connection.cursor()
         cursor.execute("""
-        CREATE TABLE views (
+        CREATE TABLE IF NOT EXISTS views (
             id UUID,
             user_id UUID,
             movie_id UUID,
             viewed_frame INTEGER NOT NULL,
-            event_time TIMESTAMP NOT NULL
+            timestamp TIMESTAMP NOT NULL
         );
         """)
 
@@ -51,24 +64,31 @@ if __name__ == "__main__":
         print('start insert')
         start = time.time()
 
-        for i in gen_data(1000, 10000):
+        for i in gen_data(1000, 100):
             cursor.executemany(
                 """INSERT INTO views """
-                """(id, user_id, movie_id, viewed_frame, event_time) """
+                """(id, user_id, movie_id, viewed_frame, timestamp) """
                 """VALUES(%s, %s, %s, %s, %s)""",
                 i)
 
         result_insert = time.time() - start
         print(f'Total time INSERT: {result_insert}')
 
-        # Check select time for 100
-        limit = 100
-        selected = [str(i[0]) for i in cursor.execute(f"SELECT user_id FROM views LIMIT {limit}").iterate()]
+        # Insert repeated values for aggregation queries
+        user_ids = get_user_ids(cursor)
+        movie_ids = get_movie_ids(cursor)
 
-        print('start select')
-        start = time.time()
-        for i in selected:
-            cursor.execute(f"SELECT * FROM views WHERE user_id='{i}'")
+        values = [(
+            choice(user_ids),
+            choice(movie_ids),
+            randint(100000, 999999),
+            datetime.now(),
+        )
+            for i in range(1000)]
 
-        result_select = time.time() - start
-        print(f'Total time SELECT: {result_select}')
+        cursor.executemany(
+            """INSERT INTO views """
+            """(user_id, movie_id, viewed_frame, timestamp) """
+            """VALUES(%s, %s, %s, %s)""",
+            values)
+        print('Insert')
