@@ -8,8 +8,6 @@ services:
       - ./fastapi_ugc/.env
     volumes:
       - ./fastapi_ugc:/app
-    ports:
-      - '8000:8000'
 
   nginx:
     image: nginx:1.23.3
@@ -29,9 +27,6 @@ services:
     image: yandex/clickhouse-server:20.4
     container_name: clickhouse-node1
     hostname: clickhouse-node1
-    ports:
-      - "8123:8123"
-      - "9000:9000"
     volumes:
       - ./clickhouse/data/node1:/etc/clickhouse-server
       - ./clickhouse/init-db/shard1.sql:/docker-entrypoint-initdb.d/init.sql
@@ -68,8 +63,6 @@ services:
 
   zookeeper:
     image: confluentinc/cp-zookeeper:6.1.1
-    ports:
-      - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
 
@@ -78,8 +71,6 @@ services:
     image: confluentinc/cp-kafka:6.1.1
     depends_on:
       - zookeeper
-    ports:
-      - '9092:9092'
     expose:
       - '29092'
     environment:

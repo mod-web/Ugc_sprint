@@ -1,6 +1,6 @@
-import asyncio
 import json
 from datetime import datetime
+from typing import Optional
 
 from aiokafka import AIOKafkaProducer
 from kafka.errors import KafkaError
@@ -21,7 +21,6 @@ class KafkaStorage:
             'message_time': str(datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')),
         }
 
-        await self.producer.start()
         try:
             await self.producer.send(
                 key=f'{message["user_id"]}:{message["film_id"]}'.encode('utf-8'),
@@ -30,16 +29,14 @@ class KafkaStorage:
             )
         except KafkaError:
             pass
-        finally:
-            await self.producer.stop()
+
+
+kafka_producer: Optional[AIOKafkaProducer] = None
+
+
+async def get_kafka_producer() -> AIOKafkaProducer:
+    return kafka_producer
 
 
 async def get_kafka_storage() -> KafkaStorage:
-    try:
-        loop = asyncio.get_running_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop = asyncio.get_event_loop()
-    producer = AIOKafkaProducer(loop=loop, bootstrap_servers=f'{settings.kafka_host}:{settings.kafka_port}')
-    return KafkaStorage(producer)
+    return KafkaStorage(kafka_producer)
