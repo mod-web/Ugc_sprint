@@ -1,0 +1,13 @@
+version: '3.10'
+
+services:
+  logstash:
+    image: logstash:7.10.1
+    environment:
+      XPACK_MONITORING_ENABLED: "false"
+    ports:
+      - "5044:5044/udp"
+    volumes:
+      - ./configs/logstash.conf:/config/logstash.conf:ro
+    # Запускаем с указанием конфигурационного файла
+    command: logstash -f /config/logstash.conf
