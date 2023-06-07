@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Tuple
 
 from fastapi import HTTPException
 from fastapi.security.http import HTTPBase
@@ -17,7 +17,7 @@ class HTTPBearer(HTTPBase):
     async def __call__(  # type: ignore
         self,
         request: Request,
-    ) -> tuple[Request, Optional[HTTPAuthorizationCredentials]]:
+    ) -> Tuple[Request, Optional[HTTPAuthorizationCredentials]]:
         """Токен достается из заголовка и валидируется."""
         exc = HTTPException(
             status_code=HTTP_403_FORBIDDEN,
