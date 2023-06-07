@@ -39,8 +39,8 @@ class Access:
             detail='Not authenticated',
             headers={'WWW-Authenticate': 'Bearer'},
         )
-        request, user = request_user
-        user = decode_token(user.token)
+        request, token = request_user
+        user = decode_token(token.token)
         if self.roles not in user.roles and user.is_admin is False:
             raise exc
         request.state.user = user
