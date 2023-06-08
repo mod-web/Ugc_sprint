@@ -97,3 +97,40 @@ services:
       echo -e 'Successfully created the following topics:'
       kafka-topics --bootstrap-server kafka:29092 --list
       "
+
+  elk-logstash:
+    image: logstash:7.10.1
+    container_name: elk-logstash
+    environment:
+      XPACK_MONITORING_ENABLED: "false"
+      ES_HOST: "elk-elasticsearch:9200"
+    ports:
+      - "5044:5044/udp"
+    volumes:
+      - ./configs/logstash.conf:/config/logstash.conf:ro
+    # Запускаем с указанием конфигурационного файла
+    command: logstash -f /config/logstash.conf
+
+  elk-elasticsearch:
+    image: elasticsearch:7.16.2
+    container_name: elk-elasticsearch
+    environment:
+      # Указываем ES запуститься в одном экземпляре
+      discovery.type: single-node
+    ports:
+      - 9200:9200
+    volumes:
+      - esdata:/tmp/elasticsearch/data
+
+  elk-kibana:
+    image: kibana:7.16.2
+    container_name: elk-kibana
+    environment:
+      ELASTICSEARCH_HOSTS: "http://elk-elasticsearch:9200"
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elk-elasticsearch
+
+volumes:
+  esdata:
