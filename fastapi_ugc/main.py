@@ -1,10 +1,11 @@
 import asyncio
+import os
 
+import sentry_sdk
 import uvicorn
 from aiokafka import AIOKafkaProducer
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
-
 
 from settings import settings
 from src.api.v1 import view_progress
@@ -24,6 +25,7 @@ app.include_router(view_progress.router, prefix='/api/v1/view_progress', tags=['
 @app.on_event('startup')
 async def startup():
     try:
+        sentry_sdk.init(dsn=os.getenv("SENTRY_SDK"), traces_sample_rate=1.0)
         loop = asyncio.get_running_loop()
     except RuntimeError:
         loop = asyncio.new_event_loop()

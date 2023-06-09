@@ -8,6 +8,8 @@ services:
       - ./fastapi_ugc/.env
     volumes:
       - ./fastapi_ugc:/app
+    environment:
+      SENTRY_DSN: ${SENTRY_DSN}
 
   nginx:
     image: nginx:1.23.3
