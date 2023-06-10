@@ -9,7 +9,7 @@ def list_of_liked_movies(usrs):
     results = []
     for i in usrs:
         start_time = time.monotonic()
-        res = list(db.likes.find({'user_id': i}, {'movie_id': 1, '_id': 0}))
+        list(db.likes.find({'user_id': i}, {'movie_id': 1, '_id': 0}))
         end_time_ms = round((time.monotonic() - start_time) * 1000, 2)
         all_time += end_time_ms
         results.append(end_time_ms)
@@ -24,7 +24,7 @@ def number_of_likes(mvs):
     results = []
     for i in mvs:
         start_time = time.monotonic()
-        res = db.likes.count_documents({'movie_id': i})
+        db.likes.count_documents({'movie_id': i})
         end_time_ms = round((time.monotonic() - start_time) * 1000, 2)
         all_time += end_time_ms
         results.append(end_time_ms)
@@ -39,12 +39,13 @@ def list_of_bookmarks(usrs):
     results = []
     for i in usrs:
         start_time = time.monotonic()
-        res = list(db.bookmarks.find({'user_id': i}, {'movie_id': 1, '_id': 0}))
+        list(db.bookmarks.find({'user_id': i}, {'movie_id': 1, '_id': 0}))
         end_time_ms = round((time.monotonic() - start_time) * 1000, 2)
         all_time += end_time_ms
         results.append(end_time_ms)
     print(f"Average select time for list of bookmarks for 1 user - {round(all_time / len(results), 2)} ms")
     return True
+
 
 def avg_like(mvs):
     """ Check select time for avg like for 100 movies """
@@ -56,17 +57,18 @@ def avg_like(mvs):
         pipeline = [{"$match": {"movie_id": i}},
                     {"$group": {"_id": "$movie_id",
                                 "averageQty": {"$avg": "$like"}}}]
-        res = db.likes.aggregate(pipeline)
+        db.likes.aggregate(pipeline)
         end_time_ms = round((time.monotonic() - start_time) * 1000, 2)
         all_time += end_time_ms
         results.append(end_time_ms)
     print(f"Average select time for avg like for 1 movie - {round(all_time / len(results), 2)} ms")
     return True
 
+
 def insert_and_select(mgr):
     """ Real-time data reading testing """
 
-    print(f'Start test insert and select')
+    print('Start test insert and select')
     db = mgr.conn_mongo()
     like = mgr.create_data('likes')
     collection_likes = db.get_collection('likes')
