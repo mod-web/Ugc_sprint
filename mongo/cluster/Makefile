@@ -1,4 +1,4 @@
-steps: config_mongo
+init: config_mongo
 
 config_mongo: config_servers shard_1 shard_2 collection
 

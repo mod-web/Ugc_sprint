@@ -16,7 +16,7 @@ class MngCollection:
         self.batch_size = configs.db.batch_size
         self.user_count = configs.db.user_count
         self.movie_count = configs.db.movie_count
-        self.docs_count = self.user_count * 1000
+        self.docs_count = self.user_count * 100
         self.db = self.conn_mongo()
         self.user_ids = [uuid.uuid4() for _ in range(self.user_count)]
         self.movie_ids = [uuid.uuid4() for _ in range(self.movie_count)]
