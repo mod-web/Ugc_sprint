@@ -7,6 +7,7 @@ import uvicorn
 from aiokafka import AIOKafkaProducer
 from fastapi import FastAPI, Request
 from fastapi.responses import ORJSONResponse
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 
 from settings import settings
 from src.api.v1 import view_progress
@@ -21,7 +22,6 @@ app = FastAPI(
 )
 
 app.logger = logging.getLogger(__name__)
-
 app.include_router(view_progress.router, prefix='/api/v1/view_progress', tags=['view_progress'])
 
 
@@ -39,7 +39,7 @@ async def log_middle(request: Request, call_next):
 @app.on_event('startup')
 async def startup():
     try:
-        sentry_sdk.init(dsn=os.getenv("SENTRY_SDK"), traces_sample_rate=1.0)
+        sentry_sdk.init(integrations=[FastApiIntegration()], dsn=os.getenv("SENTRY_SDK"), traces_sample_rate=1.0)
         loop = asyncio.get_running_loop()
     except RuntimeError:
         loop = asyncio.new_event_loop()
