@@ -1,3 +1,5 @@
+from typing import Set, Tuple
+
 from fastapi import Depends, HTTPException, Request, status
 from jose import JWTError, jwt
 from starlette.status import HTTP_403_FORBIDDEN
@@ -28,19 +30,19 @@ def get_user(request: Request) -> User:
 
 
 class Access:
-    def __init__(self, roles: set[str]):
+    def __init__(self, roles: Set[str]):
         """Список ролей, которым разрешен доступ."""
         self.roles = roles
 
-    def __call__(self, request_user: tuple[Request, HTTPAuthorizationCredentials] = Depends(security)) -> None:
+    def __call__(self, request_user: Tuple[Request, HTTPAuthorizationCredentials] = Depends(security)) -> None:
         """Токен декодируется, в нем проверяются роли."""
         exc = HTTPException(
             status_code=HTTP_403_FORBIDDEN,
             detail='Not authenticated',
             headers={'WWW-Authenticate': 'Bearer'},
         )
-        request, user = request_user
-        user = decode_token(user.token)
+        request, token = request_user
+        user = decode_token(token.token)
         if self.roles not in user.roles and user.is_admin is False:
             raise exc
         request.state.user = user
