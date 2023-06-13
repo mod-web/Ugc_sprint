@@ -53,11 +53,6 @@ async def startup():
     app.logger.addHandler(logstash_handler)
 
 
-@app.route('/debug-sentry')
-def trigger_error():
-    division_by_zero = 1 / 0
-
-
 @app.on_event('shutdown')
 async def shutdown():
     await kafka_storage.kafka_producer.stop()
