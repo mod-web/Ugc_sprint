@@ -24,7 +24,7 @@ class HTTPBearer(HTTPBase):
             detail='Not authenticated',
             headers={'WWW-Authenticate': 'Bearer'},
         )
-        authorization: str = request.headers.get('Authorization')
+        authorization: Optional[str] = request.headers.get('Authorization')
         if authorization is None:
             raise exc
         split = authorization.split()
