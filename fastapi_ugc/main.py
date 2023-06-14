@@ -21,7 +21,7 @@ app = FastAPI(
     default_response_class=ORJSONResponse,
 )
 
-app.logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 app.include_router(view_progress.router, prefix='/api/v1/view_progress', tags=['view_progress'])
 
 
@@ -31,7 +31,7 @@ async def log_middle(request: Request, call_next):
         request_id = request.headers.get('X-Request-Id')
     else:
         request_id = None
-    app.logger.info(f'request_id {request_id}')
+    logger.info(f'request_id {request_id}')
     response = await call_next(request)
     return response
 
@@ -48,9 +48,9 @@ async def startup():
     producer = AIOKafkaProducer(loop=loop, bootstrap_servers=f'{settings.kafka_host}:{settings.kafka_port}')
     kafka_storage.kafka_producer = producer
     await kafka_storage.kafka_producer.start()
-    app.logger.setLevel(logging.INFO)
+    logger.setLevel(logging.INFO)
     logstash_handler = logstash.LogstashHandler('elk-logstash', 5044, version=1)
-    app.logger.addHandler(logstash_handler)
+    logger.addHandler(logstash_handler)
 
 
 @app.on_event('shutdown')
