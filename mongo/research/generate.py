@@ -31,7 +31,7 @@ class MngCollection:
         return self.db.list_collection_names()
 
     def create_data(self, collection):
-        match collection:
+        match collection:  # noqa: E999
             case 'reviews':
                 return self.create_review()
             case 'likes':
