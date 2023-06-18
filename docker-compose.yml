@@ -1,6 +1,29 @@
 version: '3.10'
 
 services:
+  mongo_ugc:
+    image: mongo
+    restart: always
+    volumes:
+      - ./mongodbdata:/data/db mongo
+      - ./etc/mongo:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_DATABASE: ugc_movies
+    healthcheck:
+      test: [ "CMD", "mongo", "--eval", "db.runCommand('ping').ok" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  mongo-express_ugc:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo_ugc
+      ME_CONFIG_MONGODB_PORT: 27017
+
   fastapi_ugc:
     build:
       context: ./fastapi_ugc
