@@ -1,6 +1,7 @@
 import logging
 from typing import Any, Dict, Optional
 
+from bson.objectid import ObjectId
 from fastapi import HTTPException
 from motor.motor_asyncio import AsyncIOMotorCollection
 from pymongo.errors import DuplicateKeyError
@@ -27,6 +28,11 @@ class MongoServiceBase:
         logger.info('document inserted with id {0}'.format(inserted_id))
         inserted_doc_json = self.transform_to_json(inserted_doc)
         return inserted_doc_json
+
+    async def delete_one(self, id_: str):
+        filter_ = {'_id': ObjectId(id_)}
+        result = await self.collection.delete_one(filter_)
+        return result.deleted_count
 
     def transform_to_json(self, doc: Dict[str, Any]) -> Dict[str, Any]:
         doc['id'] = str(doc.pop('_id'))

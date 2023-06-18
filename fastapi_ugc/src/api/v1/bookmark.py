@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Path
+from fastapi.responses import Response
 
 from src.models.bookmark import BookMark, BookMarkResponse
 from src.services.bookmark import get_bookmarks_service, BookMarkService
@@ -17,5 +18,19 @@ async def save_view_bookmark_to_mongo(
     bookmark_data: BookMark,
     bookmarks_service: BookMarkService = Depends(get_bookmarks_service),
 ):
-    result = await bookmarks_service.insert_one(bookmark_data.dict())
-    return result
+    return await bookmarks_service.insert_one(bookmark_data.dict())
+
+
+@router.delete(
+    '/{id}',
+    description='Delete bookmark to mongo',
+    summary='Delete bookmark to mongo',
+    # response_class=Response,
+    # status_code=204,
+    # dependencies=[Depends(Access({'admin', 'subscriber'}))],
+)
+async def delete_bookmark(
+    id_: str = Path(alias='id'),
+    bookmarks_service: BookMarkService = Depends(get_bookmarks_service),
+):
+    return await bookmarks_service.delete_one(id_)
