@@ -33,7 +33,7 @@ async def delete_bookmark(
     id_: str = Path(alias='id'),
     bookmarks_service: BookMarkService = Depends(get_bookmarks_service),
 ):
-    return await bookmarks_service.delete_one(id_)
+    await bookmarks_service.delete_one(id_)
 
 
 @router.get(

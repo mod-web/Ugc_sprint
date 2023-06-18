@@ -26,7 +26,7 @@ async def save_view_review_to_mongo(
     description='Save like for review',
     summary='Save like for review',
     response_class=Response,
-    status_code=204,
+    status_code=201,
     # dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
 async def save_like_for_review_to_mongo(
@@ -51,3 +51,18 @@ async def show_all_movie_reviews(
     page_size: int = Query(default=10, ge=1),
 ):
     return await review_service.find_all({'film_id': id_}, page, page_size)
+
+
+@router.delete(
+    '/{id}',
+    description='Delete review',
+    summary='Delete review',
+    response_class=Response,
+    status_code=201,
+    # dependencies=[Depends(Access({'admin', 'subscriber'}))],
+)
+async def delete_review(
+    id_: str = Path(alias='id'),
+    bookmarks_service: ReviewService = Depends(get_reviews_service),
+):
+    await bookmarks_service.delete_one(id_)
