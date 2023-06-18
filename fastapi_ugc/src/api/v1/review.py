@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, Path
+from fastapi import APIRouter, Depends, Path, Query
 from fastapi.responses import Response
 
-from src.models.review import ReviewMovie, ReviewResponse
+from src.models.review import ReviewMovie, ReviewResponse, ReviewWithLikesList
 from src.services.review import get_reviews_service, ReviewService
 
 router = APIRouter()
@@ -35,3 +35,19 @@ async def save_like_for_review_to_mongo(
     id_: str = Path(alias='id'),
 ):
     return await review_service.patch_one(id_, like)
+
+
+@router.get(
+    '/movies/{id}',
+    description='Show all movie reviews',
+    summary='Show all movie reviews',
+    response_model=ReviewWithLikesList,
+    # dependencies=[Depends(Access({'admin', 'subscriber'}))],
+)
+async def show_all_movie_reviews(
+    id_: str = Path(alias='id'),
+    review_service: ReviewService = Depends(get_reviews_service),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=10, ge=1),
+):
+    return await review_service.find_all({'film_id': id_}, page, page_size)

@@ -1,4 +1,6 @@
-from src.models.base import Created
+from typing import List, Optional
+
+from src.models.base import Created, Paginated
 
 
 class ReviewLike(Created):
@@ -15,3 +17,11 @@ class ReviewMovie(Created):
 
 class ReviewResponse(ReviewMovie):
     id: str
+
+
+class ReviewWithLikes(ReviewResponse):
+    likes: Optional[List[bool]]
+
+
+class ReviewWithLikesList(Paginated):
+    data: List[ReviewWithLikes]
