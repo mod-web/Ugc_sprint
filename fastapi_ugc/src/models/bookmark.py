@@ -1,22 +1,10 @@
-from datetime import datetime
-from typing import Optional, List
-
-from pydantic import BaseModel, validator
-
-from src.models.base import Paginated
+from typing import List
 
 
-class BookMark(BaseModel):
-    film_id: str
-    user_id: str
-    created: Optional[datetime]
-
-    @validator('created', pre=True, always=True)
-    def set_created(cls, v):  # noqa: N805
-        return v or datetime.now()
+from src.models.base import Paginated, Base
 
 
-class BookMarkResponse(BookMark):
+class BookMarkResponse(Base):
     id: str
 
 
