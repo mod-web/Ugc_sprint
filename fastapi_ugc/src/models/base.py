@@ -9,9 +9,7 @@ class Paginated(BaseModel):
     page: int
 
 
-class Base(BaseModel):
-    film_id: str
-    user_id: str
+class Created(BaseModel):
     created: Optional[datetime]
 
     @validator('created', pre=True, always=True)

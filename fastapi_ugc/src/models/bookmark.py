@@ -1,10 +1,15 @@
 from typing import List
 
 
-from src.models.base import Paginated, Base
+from src.models.base import Paginated, Created
 
 
-class BookMarkResponse(Base):
+class Bookmark(Created):
+    film_id: str
+    user_id: str
+
+
+class BookMarkResponse(Bookmark):
     id: str
 
 

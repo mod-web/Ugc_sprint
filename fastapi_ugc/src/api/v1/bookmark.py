@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, Path, Query
 from fastapi.responses import Response
 
-from src.models.base import Base
-from src.models.bookmark import BookMarkResponse, BookMarkResponseList
+from src.models.bookmark import BookMarkResponse, BookMarkResponseList, Bookmark
 from src.services.bookmark import get_bookmarks_service, BookMarkService
 
 router = APIRouter()
@@ -16,7 +15,7 @@ router = APIRouter()
     # dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
 async def save_view_bookmark_to_mongo(
-    bookmark_data: Base,
+    bookmark_data: Bookmark,
     bookmarks_service: BookMarkService = Depends(get_bookmarks_service),
 ):
     return await bookmarks_service.insert_one(bookmark_data.dict())
