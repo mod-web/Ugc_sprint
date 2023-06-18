@@ -7,7 +7,6 @@ from tqdm import tqdm
 from config import configs
 
 
-
 class MngCollection:
     """ Cls for operation with Mongo """
 
