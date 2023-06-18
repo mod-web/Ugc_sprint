@@ -11,3 +11,4 @@ requests==2.31.0
 pytest==7.3.1
 sentry-sdk[fastapi]==1.25.1
 python-logstash==0.4.6
+motor==3.1.2
