@@ -1,9 +1,4 @@
-import os
 import time
-import uuid
-from contextlib import contextmanager
-import psycopg2
-from psycopg2.extras import RealDictCursor
 
 from generate import PgCollection
 
@@ -104,6 +99,7 @@ def insert_and_select(db, cur):
               f'After insert likes: {after_num_likes}\n'
               f'Insert + Select time: {insert_time + selected_time}')
     return True
+
 
 if __name__ == '__main__':
     pg = PgCollection()
