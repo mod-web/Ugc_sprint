@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Path
+from fastapi.responses import Response
 
 from src.models.review import ReviewMovie, ReviewResponse
 from src.services.review import get_reviews_service, ReviewService
@@ -24,10 +25,11 @@ async def save_view_review_to_mongo(
     '/{id}/like',
     description='Save like for review',
     summary='Save like for review',
-    # response_model=ReviewResponse,
+    response_class=Response,
+    status_code=204,
     # dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
-async def save_view_review_to_mongo(
+async def save_like_for_review_to_mongo(
     like: bool,
     review_service: ReviewService = Depends(get_reviews_service),
     id_: str = Path(alias='id'),
