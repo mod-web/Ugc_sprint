@@ -24,6 +24,7 @@ app = FastAPI(
 logger = logging.getLogger(__name__)
 app.include_router(view_progress.router, prefix='/api/v1/view_progress', tags=['view_progress'])
 app.include_router(bookmark.router, prefix='/api/v1/bookmarks', tags=['bookmarks'])
+app.include_router(bookmark.router, prefix='/api/v1/likes', tags=['likes'])
 
 
 @app.middleware("http")

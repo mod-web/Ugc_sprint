@@ -49,4 +49,4 @@ async def show_all_user_bookmarks(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=10, ge=1),
 ):
-    return await bookmarks_service.find_all({'user_id': id_}, page, page_size)
+    return await bookmarks_service.find_all_with_paging({'user_id': id_}, page, page_size)

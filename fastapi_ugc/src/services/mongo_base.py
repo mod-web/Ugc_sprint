@@ -34,7 +34,19 @@ class MongoServiceBase:
         result = await self.collection.delete_one(filter_)
         return result.deleted_count
 
-    async def find_all(self, filter: Dict[str, str], page: int, page_size: int):
+    async def delete(self, filter: Dict[str, str]):
+        result = await self.collection.delete_one(filter)
+        return result.deleted_count
+
+    async def find_one(self, filter: Dict[str, str]):
+        result = await self.collection.find_one(filter)
+        return result
+
+    async def find_all(self, filter: Dict[str, str]):
+        result = await self.collection.find(filter).to_list(length=None)
+        return result
+
+    async def find_all_with_paging(self, filter: Dict[str, str], page: int, page_size: int):
         skip = self.make_skip(page, page_size)
         cursor_with_filter = self.collection.find(filter).skip(skip).limit(page_size)
         cursor_all_docs = self.collection.find(filter)
