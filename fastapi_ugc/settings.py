@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     mongodb_collection_bookmarks: str = Field(..., env='MONGODB_COLLECTION_BOOKMARKS')
     mongodb_collection_likes: str = Field(..., env='MONGODB_COLLECTION_LIKES')
     mongodb_collection_reviews: str = Field(..., env='MONGODB_COLLECTION_REVIEWS')
+    mongodb_collection_review_likes: str = Field(..., env='MONGODB_COLLECTION_REVIEW_LIKES')
     project_name: str = Field(..., env='PROJECT_NAME')
     base_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     kafka_host: str = Field(..., env='KAFKA_HOST')
