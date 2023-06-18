@@ -1,7 +1,9 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, validator
+
+from src.models.base import Paginated
 
 
 class BookMark(BaseModel):
@@ -16,3 +18,7 @@ class BookMark(BaseModel):
 
 class BookMarkResponse(BookMark):
     id: str
+
+
+class BookMarkResponseList(Paginated):
+    data: List[BookMarkResponse]

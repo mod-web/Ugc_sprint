@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, Path
+from fastapi import APIRouter, Depends, Path, Query
 from fastapi.responses import Response
 
-from src.models.bookmark import BookMark, BookMarkResponse
+from src.models.bookmark import BookMark, BookMarkResponse, BookMarkResponseList
 from src.services.bookmark import get_bookmarks_service, BookMarkService
 
 router = APIRouter()
@@ -25,8 +25,8 @@ async def save_view_bookmark_to_mongo(
     '/{id}',
     description='Delete bookmark to mongo',
     summary='Delete bookmark to mongo',
-    # response_class=Response,
-    # status_code=204,
+    response_class=Response,
+    status_code=204,
     # dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
 async def delete_bookmark(
@@ -34,3 +34,19 @@ async def delete_bookmark(
     bookmarks_service: BookMarkService = Depends(get_bookmarks_service),
 ):
     return await bookmarks_service.delete_one(id_)
+
+
+@router.get(
+    '/users/{id}',
+    description='Show all user bookmarks',
+    summary='Show all user bookmarks',
+    response_model=BookMarkResponseList,
+    # dependencies=[Depends(Access({'admin', 'subscriber'}))],
+)
+async def show_all_user_bookmarks(
+    id_: str = Path(alias='id'),
+    bookmarks_service: BookMarkService = Depends(get_bookmarks_service),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=10, ge=1),
+):
+    return await bookmarks_service.find_all(id_, page, page_size)
