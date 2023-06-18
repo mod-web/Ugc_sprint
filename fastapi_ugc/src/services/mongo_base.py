@@ -34,10 +34,10 @@ class MongoServiceBase:
         result = await self.collection.delete_one(filter_)
         return result.deleted_count
 
-    async def find_all(self, id: str, page: int, page_size: int):
+    async def find_all(self, filter: Dict[str, str], page: int, page_size: int):
         skip = self.make_skip(page, page_size)
-        cursor_with_filter = self.collection.find({'user_id': id}).skip(skip).limit(page_size)
-        cursor_all_docs = self.collection.find({'user_id': id})
+        cursor_with_filter = self.collection.find(filter).skip(skip).limit(page_size)
+        cursor_all_docs = self.collection.find(filter)
 
         filtered_results = await cursor_with_filter.to_list(length=None)
         all_results = await cursor_all_docs.to_list(length=None)
@@ -53,7 +53,7 @@ class MongoServiceBase:
         doc['id'] = str(doc.pop('_id'))
         return doc
 
-    def transform_list(self, docs: List[dict[str, Any]]) -> List[Dict[str, Any]]:
+    def transform_list(self, docs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Приводим ObjectID к str в каждом документе."""
         transformed_list = []
         for doc in docs:
@@ -63,4 +63,3 @@ class MongoServiceBase:
     def make_skip(self, page: int, page_size: int) -> int:
         """Оффсет для запроса."""
         return page_size * (page - 1)
-
