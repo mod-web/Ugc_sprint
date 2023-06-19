@@ -27,7 +27,7 @@ async def create_like(
     summary='Delete like from mongo',
     response_class=Response,
     status_code=201,
-    # dependencies=[Depends(Access({'admin', 'subscriber'}))],
+    dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
 async def delete_like(
     id_: str = Path(alias='id'),
@@ -41,7 +41,7 @@ async def delete_like(
     description='Show average film rate',
     summary='Show average film rate',
     response_model=FilmRate,
-    # dependencies=[Depends(Access({'admin', 'subscriber'}))],
+    dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
 async def show_average_film_rate(
     film_id: str,
@@ -55,7 +55,7 @@ async def show_average_film_rate(
     description='Show film likes',
     summary='Show film likes',
     response_model=LikeResponseList,
-    # dependencies=[Depends(Access({'admin', 'subscriber'}))],
+    dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
 async def get_film_likes(
     film_id: str,
