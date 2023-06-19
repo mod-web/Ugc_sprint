@@ -34,10 +34,6 @@ class MongoServiceBase:
         result = await self.collection.delete_one(filter_)
         return result.deleted_count
 
-    async def delete(self, filter: Dict[str, str]):
-        result = await self.collection.delete_one(filter)
-        return result.deleted_count
-
     async def find_one(self, filter: Dict[str, str]):
         result = await self.collection.find_one(filter)
         return result

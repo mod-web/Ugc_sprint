@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Path, Query
 from fastapi.responses import Response
-
-from src.models.like import Like, FilmRate
+from src.auth.verification import Access
+from src.models.like import Like, FilmRate, LikeResponseList
 from src.services.like import get_likes_service, LikeService
 
 router = APIRouter()
@@ -12,28 +12,28 @@ router = APIRouter()
     description='Save personal film rate to mongo',
     summary='Save personal film rate to mongo',
     response_model=Like,
-    # dependencies=[Depends(Access({'admin', 'subscriber'}))],
+    dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
 async def create_like(
     like: Like,
     likes_service: LikeService = Depends(get_likes_service),
 ):
-    return await likes_service.create_like(like)
+    return await likes_service.insert_one(like.dict())
 
 
 @router.delete(
-    '',
+    '/{id}',
     description='Delete like from mongo',
     summary='Delete like from mongo',
     response_class=Response,
-    status_code=204,
+    status_code=201,
     # dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
-async def delete_bookmark(
-    like: Like,
+async def delete_like(
+    id_: str = Path(alias='id'),
     likes_service: LikeService = Depends(get_likes_service),
 ):
-    return await likes_service.remove_like(like)
+    return await likes_service.delete_one(id_)
 
 
 @router.get(
@@ -54,7 +54,7 @@ async def show_average_film_rate(
     '/{film_id}',
     description='Show film likes',
     summary='Show film likes',
-    response_model=FilmRate,
+    response_model=LikeResponseList,
     # dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
 async def get_film_likes(

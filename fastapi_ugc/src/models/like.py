@@ -1,4 +1,7 @@
+from typing import List
 from pydantic import BaseModel
+
+from src.models.base import Paginated
 
 
 class Like(BaseModel):
@@ -10,3 +13,7 @@ class Like(BaseModel):
 class FilmRate(BaseModel):
     film_id: str
     average_rate: float
+
+
+class LikeResponseList(Paginated):
+    data: List[Like]
