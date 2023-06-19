@@ -29,8 +29,8 @@ class LikeService(MongoServiceBase):
 
     async def get_film_rate(self, film_id: str) -> dict:
         """Получить рейтинг фильма"""
-        data = await self.find_all(**{"film_id": film_id})
-        return {'film_id': film_id, 'average_rate': sum([film_like.rate for film_like in data])/len(data)}
+        data = await self.find_all({"film_id": film_id})
+        return {'film_id': film_id, 'average_rate': sum([film_like.rate for film_like in data]) / len(data)}
 
 
 @lru_cache(maxsize=None)
