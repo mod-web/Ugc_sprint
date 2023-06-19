@@ -10,7 +10,7 @@ from fastapi.responses import ORJSONResponse
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 
 from settings import settings
-from src.api.v1 import view_progress, bookmark, review
+from src.api.v1 import view_progress, bookmark, likes, review
 from src.services import kafka_storage
 import logstash
 
@@ -24,6 +24,7 @@ app = FastAPI(
 logger = logging.getLogger(__name__)
 app.include_router(view_progress.router, prefix='/api/v1/view_progress', tags=['view_progress'])
 app.include_router(bookmark.router, prefix='/api/v1/bookmarks', tags=['bookmarks'])
+app.include_router(likes.router, prefix='/api/v1/likes', tags=['likes'])
 app.include_router(review.router, prefix='/api/v1/reviews', tags=['reviews'])
 
 
