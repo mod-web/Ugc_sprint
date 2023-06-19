@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Path, Query
 from fastapi.responses import Response
 
+from src.auth.verification import Access
 from src.models.review import ReviewMovie, ReviewResponse, ReviewWithLikesList
 from src.services.review import get_reviews_service, ReviewService
 
@@ -12,7 +13,7 @@ router = APIRouter()
     description='Save review to mongo',
     summary='Save review to mongo',
     response_model=ReviewResponse,
-    # dependencies=[Depends(Access({'admin', 'subscriber'}))],
+    dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
 async def save_view_review_to_mongo(
     review_data: ReviewMovie,
@@ -27,7 +28,7 @@ async def save_view_review_to_mongo(
     summary='Save like for review',
     response_class=Response,
     status_code=201,
-    # dependencies=[Depends(Access({'admin', 'subscriber'}))],
+    dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
 async def save_like_for_review_to_mongo(
     like: bool,
@@ -42,7 +43,7 @@ async def save_like_for_review_to_mongo(
     description='Show all movie reviews',
     summary='Show all movie reviews',
     response_model=ReviewWithLikesList,
-    # dependencies=[Depends(Access({'admin', 'subscriber'}))],
+    dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
 async def show_all_movie_reviews(
     id_: str = Path(alias='id'),
@@ -59,7 +60,7 @@ async def show_all_movie_reviews(
     summary='Delete review',
     response_class=Response,
     status_code=201,
-    # dependencies=[Depends(Access({'admin', 'subscriber'}))],
+    dependencies=[Depends(Access({'admin', 'subscriber'}))],
 )
 async def delete_review(
     id_: str = Path(alias='id'),
