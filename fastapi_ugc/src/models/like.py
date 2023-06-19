@@ -1,9 +1,4 @@
-from datetime import datetime
-from typing import Optional, List
-
-from pydantic import BaseModel, validator
-
-from src.models.base import Paginated
+from pydantic import BaseModel
 
 
 class Like(BaseModel):
