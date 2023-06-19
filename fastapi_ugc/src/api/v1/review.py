@@ -50,7 +50,7 @@ async def show_all_movie_reviews(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=10, ge=1),
 ):
-    return await review_service.find_all({'film_id': id_}, page, page_size)
+    return await review_service.find_all_with_paging({'film_id': id_}, page, page_size)
 
 
 @router.delete(
